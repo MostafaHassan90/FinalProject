@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Development 2024 Final Project</title>
+    <script>
+        function getdata() {
+            fetch('http://www.cc.puv.fi/~e2301488/mydata.txt')
+                .then(r => r.text())
+                .then(data => dispdata(data));
+        }
+        function dispdata(d) {
+            let ctt = document.getElementById("data");
+            // ctt.innerHTML = d;
+            can = document.getElementById("chart");
+            ctx = can.getContext("2d");
+            ctx.lineWidth = 10;
+            let lines = d.split("\n"); //split means split the text into lines
+            let i = 0; // counter to change line position when drawing
+            let h = can.height;
+
+            while (typeof lines[0] !== "undefined") {
+                let curline = lines.shift(); //read the top line
+                let splt = curline.split(' ');
+                let min = parseInt(splt[2]), max = parseInt(splt[3]);
+                if (min > max) {
+                    let temp = min;
+                    min = max;
+                    max = temp;
+                }
+                // ctt.innerHTML += curline + "<br/>";
+                ctx.strokeStyle = '#00FF00';
+                ctx.beginPath();
+                ctx.moveTo(i * 30 + 10, h/2);
+                ctx.lineTo(i * 30 + 10, max * 5 + h / 2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.strokeStyle = '#FF0000';
+                ctx.moveTo(i * 30 + 20, h / 2);
+                ctx.lineTo(i * 30 + 20, min * 5 + h / 2);
+                ctx.stroke();
+                i = i + 1;
+                // to split by spaces default splitter is space in js or you can use ' '
+            }
+        }
+    </script>
+</head>
+<body onload="getdata();">
+    
+    <p id="data"></p>
+    <!-- <input type="button" value="Show data" onclick="getdata()" /> -->
+    <canvas id="chart" height="600" width="1000" style="border:solid 2px blue"></canvas>
+</body>
+</html>
